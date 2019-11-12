@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Random Shape Generator by kittlish</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="generator.js" charset="utf-8"></script>
+  <style>
+    .flex-container {
+      display: flex;
+      justify-content: center;
+    }
+
+    #sliders {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 812px;
+      max-width: 812px;
+    }
+    table {
+      width: 48%;
+      margin: 4px;
+    }
+
+    td:first-child {
+      min-width: 60px;
+      text-align: right;
+      padding-right: 4px;
+    }
+    td:nth-child(2) {
+      min-width: 200px;
+    }
+    td:last-child {
+      min-width: 60px;
+      text-align: left;
+      padding-left: 4px;
+    }
+
+    .slider {
+      -webkit-appearance: none;
+      height: 15px;
+      width: 100%;
+      border-radius: 50%;
+      background: #d3d3d3;
+      outline: none;
+      display: inline;
+      opacity: 0.7;
+      -webkit-transition: .2s;
+      transition: opacity .2s;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 15px;
+      height: 25px;
+      border-radius: 2px;
+      background: #8fb9f7;
+    }
+    .slider::-moz-range-thumb {
+      width: 15px;
+      height: 25px;
+      border-radius: 2px;
+      background: #8fb9f7;
+    }
+
+    button {
+      margin-top: 16px;
+      background-color: #8ff7cd;
+      border: none;
+      border-radius: 4px;
+      padding: 15px 32px;
+      font-size: 16px;
+      transition-duration: 0.1s;
+      -webkit-transition-duration: 0.1s;
+    }
+    button:hover {
+      background-color: #d1fcf5;
+      cursor: pointer;
+    }
+
+    #debug {
+      opacity: 0;
+    }
+    #debugtext {
+      margin-right: 20px;
+      opacity: 0;
+      transition-duration: 0.2s;
+      -webkit-transition-duration: 0.2s;
+      transition-delay: 0s;
+      -webkit-transition-delay: 0s;
+    }
+    #debugtext:hover {
+      opacity: 1;
+      transition-delay: 0.5s;
+      -webkit-transition-delay: 0.5s;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="flex-container">
+    <div id="render" style="max-width: 800px; width: 100vw; margin-bottom: 12px"></div>
+  </div>
+
+  <div class="flex-container">
+    <div id="sliders">
+      <table>
+        <tr>
+          <td>Simple</td>
+          <td><input type="range" min="5" max="24" value="12" class="slider" id="complexity"></td>
+          <td>Complex</td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <td>Smooth</td>
+          <td><input type="range" min="0" max="100" value="55" class="slider" id="sharpness"></td>
+          <td>Sharp</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="flex-container">
+    <button type="button" id="GenerateShape">Gimme a Shape!</button>
+  </div>
+  <p style="position: fixed; bottom: 0px; left: 0px">
+    <input type="checkbox" name="debug" id="debug" disabled><label for="debug" id="debugtext">debug off</label>
+  </p>
+  <p style="position: fixed; bottom: 0px; right: 8px; color: #aaaaaa">v1.0</p>
+</body>
+</html>
