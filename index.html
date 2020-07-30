@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <meta charset="utf-8" />
   <title>Random Shape Generator by kittlish</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="generator.js" charset="utf-8"></script>
@@ -18,23 +19,46 @@
       width: 812px;
       max-width: 812px;
     }
+
+    a {
+      font-family: sans-serif;
+      font-size: 12px;
+      color: #555555;
+    }
+    a:hover {
+      color: black;
+      cursor: pointer;
+    }
+
     table {
       width: 48%;
       margin: 4px;
+      font-family: sans-serif;
+      font-size: 14px;
     }
-
     td:first-child {
       min-width: 60px;
       text-align: right;
-      padding-right: 4px;
+      padding-right: 6px;
+      vertical-align: top;
+    }
+    td:first-child:hover {
+      cursor: default;
     }
     td:nth-child(2) {
       min-width: 200px;
+      vertical-align: bottom;
+      padding-left: 2px;
+      padding-right: 2px;
     }
     td:last-child {
       min-width: 60px;
       text-align: left;
-      padding-left: 4px;
+      padding-left: 6px;
+      vertical-align: top;
+    }
+    td:last-child:hover {
+      cursor: default;
     }
 
     .slider {
@@ -49,19 +73,22 @@
       -webkit-transition: .2s;
       transition: opacity .2s;
     }
+    .slider:hover {
+      cursor: grab;
+    }
     .slider::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 15px;
-      height: 25px;
+      width: 8px;
+      height: 28px;
       border-radius: 2px;
-      background: #8fb9f7;
+      background: #555587;
     }
     .slider::-moz-range-thumb {
-      width: 15px;
-      height: 25px;
+      width: 8px;
+      height: 28px;
       border-radius: 2px;
-      background: #8fb9f7;
+      background: #555587;
     }
 
     button {
@@ -70,7 +97,7 @@
       border: none;
       border-radius: 4px;
       padding: 15px 32px;
-      font-size: 16px;
+      font-size: 18px;
       transition-duration: 0.1s;
       -webkit-transition-duration: 0.1s;
     }
@@ -125,9 +152,12 @@
   <div class="flex-container">
     <button type="button" id="GenerateShape">Gimme a Shape!</button>
   </div>
+  <div class="flex-container">
+    <p><a id="reset">Reset Sliders</a></p>
+  </div>
   <p style="position: fixed; bottom: 0px; left: 0px">
     <input type="checkbox" name="debug" id="debug" disabled><label for="debug" id="debugtext">debug off</label>
   </p>
-  <p style="position: fixed; bottom: 0px; right: 8px; color: #aaaaaa">v1.0</p>
+  <p style="position: fixed; bottom: 0px; right: 16px; color: #999999">v1.1</p>
 </body>
 </html>

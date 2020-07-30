@@ -1,8 +1,8 @@
-var c = document.createElement("canvas"); //the canvas
+var c = document.createElement("canvas");     //the canvas
 c.height = 1012;
 c.width = 1800;
-var ctx = c.getContext("2d"); //the context
-var render = document.createElement("img"); //the png render of the canvas
+var ctx = c.getContext("2d");                 //the context
+var render = document.createElement("img");   //the png render of the canvas
 render.setAttribute("width", "100%");
 render.setAttribute("src", c.toDataURL("image/png"));
 render.setAttribute("style", "border: 2px solid #cccccc;");
@@ -13,25 +13,45 @@ var draw_height = c.height * 0.8;
 var high_margin = c.height * 0.1;
 
 //parameters
-var complexity = 12; //the number of points used to draw the shape, between 5 and 24
-var sharpness = 0.55; //affects the chances of a straight line vs curves
-var debug = false;
 const MIN_COMPLEXITY = 5;
-const MAX_COMPLEXITY = 24;
+const MAX_COMPLEXITY = 26;
+const DEF_COMPLEXITY = 12;
+const DEF_SHARPNESS = 0.55;
+var complexity = DEF_COMPLEXITY;  //the number of points used to draw the shape
+var sharpness = DEF_SHARPNESS;    //affects the chances of a straight line vs curves, and the linejoin property
+var debug = false;
+ctx.miterLimit = 8;
 
-//stores the points for this shape
+//stores the points for this shape, in duplicate
 var points = [];
 var duplepoints = [];
 
-$(document).ready(function() {
+$(document).ready(function() {      //on document ready, assign functions to various elements to "attach" them to the javascript
   $("#render").append(render);
   $("#complexity").change(function() {
     complexity = document.getElementById("complexity").value;
   });
   $("#sharpness").change(function() {
     sharpness = document.getElementById("sharpness").value / 100;
+    if (sharpness <= 0.2) {
+      ctx.lineJoin = "round";
+    } else {
+      ctx.lineJoin = "miter";
+      if (sharpness <= 0.35) {
+        ctx.miterLimit = 6;
+      } else if (sharpness <= 0.5) {
+        ctx.miterLimit = 7;
+      } else if (sharpness <= 0.6) {
+        ctx.miterLimit = 8;
+      } else if (sharpness <= 0.85) {
+        ctx.miterLimit = 9;
+      } else {
+        ctx.miterLimit = 10;
+      }
+    }
   });
-  var enabledebug;
+
+  var enabledebug;                  //this code makes it so that you can't click on the debug option when it's invisible
   $("#debugtext").hover(function() {
     enabledebug = setTimeout(function() {
       $("#debug").removeAttr("disabled");
@@ -50,7 +70,14 @@ $(document).ready(function() {
       document.getElementById("debugtext").innerHTML = "debug off";
     }
   })
+
   document.getElementById("GenerateShape").onclick = function() {drawShape()};
+  document.getElementById("reset").onclick = function() {
+    complexity = document.getElementById("complexity").value = DEF_COMPLEXITY;
+    document.getElementById("sharpness").value = DEF_SHARPNESS*100;
+    sharpness = DEF_SHARPNESS;
+    ctx.miterLimit = 8;
+  };
 });
 
 class Point {
@@ -174,6 +201,7 @@ function drawShape() {
       ctx.lineTo(points[i].x, points[i].y);
     }
     ctx.lineTo(points[0].x, points[0].y);
+    ctx.closePath();
     ctx.stroke();
     if (debug) {
       drawPoints();
@@ -182,7 +210,7 @@ function drawShape() {
     return;
   }
 
-  if (sharpness == 0) { //effeciently draws a shape using only bezier curves when settings call for it. sometimes, one quadratic curve is neededs
+  if (sharpness == 0) { //effeciently draws a shape using only bezier curves when settings call for it. sometimes, one quadratic curve is needed
     var start = points.shift();
     var inter1 = points.shift();
     var inter2 = points.shift();
@@ -210,6 +238,7 @@ function drawShape() {
     inter2 = bezierPoint(duplepoints[0], duplepoints[1]);
     next = duplepoints[0];
     ctx.bezierCurveTo(inter1.x, inter1.y, inter2.x, inter2.y, next.x, next.y);
+    ctx.closePath();
     ctx.stroke();
     points = duplepoints.slice(0);
     if (debug) {
@@ -282,8 +311,9 @@ function drawShape() {
           if (debug) console.log("quadratic smooth");
           var inter = bezierPoint(current, prev);
         } else {
-          if (debug) console.log("final quadratic");
+          if (debug) console.log("final quadratic"); //if we're using the final point as a quadratic point rather than an end point, this will close the shape
           ctx.quadraticCurveTo(next.x, next.y, start.x, start.y);
+          ctx.closePath();
           ctx.stroke();
           points = duplepoints.slice(0);
           if (debug) {
@@ -306,6 +336,7 @@ function drawShape() {
         var inter2 = bezierPoint(duplepoints[0], duplepoints[1]);
         next = duplepoints[0];
         ctx.bezierCurveTo(inter1.x, inter1.y, inter2.x, inter2.y, next.x, next.y);
+        ctx.closePath();
         ctx.stroke();
         points = duplepoints.slice(0);
         if (debug) {
@@ -334,7 +365,7 @@ function drawShape() {
       ctx.bezierCurveTo(inter1.x, inter1.y, inter2.x, inter2.y, start.x, start.y);
       break;
   }
-
+  ctx.closePath();
   ctx.stroke();
   points = duplepoints.slice(0);
   if (debug) {
